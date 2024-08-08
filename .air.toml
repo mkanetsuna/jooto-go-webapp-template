@@ -1,0 +1,16 @@
+# .air.toml
+[build]
+  cmd = "go build -o main ."
+  bin = "main"
+  full_bin = "APP_ENV=dev ./main"
+  include_ext = ["go"]
+  exclude_dir = ["vendor"]
+  exclude_file = ["*.test.go"]
+  follow_symlink = true
+  # set tmp_dir to a empty dir in your $HOME
+  tmp_dir = "tmp"
+
+[log]
+  level = "debug"
+  color = "true"
+  timestamp = "true"
