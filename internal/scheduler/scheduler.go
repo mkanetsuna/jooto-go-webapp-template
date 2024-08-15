@@ -31,35 +31,39 @@ func SetupScheduler(projectID, location, serviceURL string) error {
 }
 
 func setupJob(ctx context.Context, client *cloudscheduler.CloudSchedulerClient, projectID, location, serviceURL, jobName, schedule string) error {
-	parent := fmt.Sprintf("projects/%s/locations/%s", projectID, location)
-	jobID := fmt.Sprintf("%s/%s", parent, jobName)
+    parent := fmt.Sprintf("projects/%s/locations/%s", projectID, location)
+    jobID := fmt.Sprintf("%s/jobs/%s", parent, jobName)
 
-	job := &schedulerpb.Job{
-		Name: jobID,
-		Target: &schedulerpb.Job_HttpTarget{
-			HttpTarget: &schedulerpb.HttpTarget{
-				Uri:        fmt.Sprintf("%s/scheduled-task", serviceURL),
-				HttpMethod: schedulerpb.HttpMethod_POST,
-			},
-		},
-		Schedule: schedule,
-	}
+    job := &schedulerpb.Job{
+        Name: jobID,
+        Target: &schedulerpb.Job_HttpTarget{
+            HttpTarget: &schedulerpb.HttpTarget{
+                Uri:        fmt.Sprintf("%s/scheduled-task", serviceURL),
+                HttpMethod: schedulerpb.HttpMethod_POST,
+            },
+        },
+        Schedule: schedule,
+    }
 
-	req := &schedulerpb.CreateJobRequest{
-		Parent: parent,
-		Job:    job,
-	}
+    req := &schedulerpb.CreateJobRequest{
+        Parent: parent,
+        Job:    job,
+    }
 
-	_, err := client.CreateJob(ctx, req)
-	if err != nil {
-		// If the job already exists, update it
-		if _, err := client.UpdateJob(ctx, &schedulerpb.UpdateJobRequest{Job: job}); err != nil {
-			return fmt.Errorf("Failed to update job: %v", err)
-		}
-		log.Printf("Updated existing job: %s", jobID)
-	} else {
-		log.Printf("Created new job: %s", jobID)
-	}
+    _, err := client.CreateJob(ctx, req)
+    if err != nil {
+        // If the job already exists, update it
+        updateReq := &schedulerpb.UpdateJobRequest{
+            Job: job,
+        }
+        _, err = client.UpdateJob(ctx, updateReq)
+        if err != nil {
+            return fmt.Errorf("Failed to update job: %v", err)
+        }
+        log.Printf("Updated existing job: %s", jobID)
+    } else {
+        log.Printf("Created new job: %s", jobID)
+    }
 
-	return nil
+    return nil
 }
