@@ -1,1 +1,0 @@
-# jooto-go-webapp-template

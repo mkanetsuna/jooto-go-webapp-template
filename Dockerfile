@@ -1,20 +1,19 @@
-# Use the official Go image
-FROM golang:1.18-alpine
+# Use the official Golang image to create a build artifact.
+FROM golang:1.20 as builder
 
-# Set the Current Working Directory inside the container
+# Copy local code to the container image.
 WORKDIR /app
-
-# Copy go.mod and go.sum files
-COPY go.mod go.sum ./
-
-# Download all dependencies. Dependencies will be cached if the go.mod and go.sum files are not changed
-RUN go mod download
-
-# Copy the source code into the container
 COPY . .
 
-# Expose port 8080 to the outside world
-EXPOSE 8080
+# Build the command inside the container.
+RUN CGO_ENABLED=0 GOOS=linux go build -v -o server ./cmd
 
-# Command to run the Go application
-CMD ["go", "run", "main.go"]
+# Use a Docker multi-stage build to create a lean production image.
+FROM alpine:3
+RUN apk add --no-cache ca-certificates
+
+# Copy the binary to the production image from the builder stage.
+COPY --from=builder /app/server /server
+
+# Run the web service on container startup.
+CMD ["/server"]
