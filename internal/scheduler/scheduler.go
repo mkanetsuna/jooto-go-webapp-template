@@ -43,6 +43,7 @@ func setupJob(ctx context.Context, client *cloudscheduler.CloudSchedulerClient, 
             },
         },
         Schedule: schedule,
+        TimeZone: "Etc/UTC",
     }
 
     req := &schedulerpb.CreateJobRequest{
