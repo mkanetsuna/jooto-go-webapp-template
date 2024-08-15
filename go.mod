@@ -2,8 +2,6 @@ module github.com/mkanetsuna/jooto-go-webapp-template
 
 go 1.22
 
-toolchain go1.22.5
-
 require (
 	cloud.google.com/go/scheduler v1.9.0
 	google.golang.org/genproto v0.0.0-20230410155749-daa745c078e1
