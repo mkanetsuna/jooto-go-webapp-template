@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"time"
 
 	cloudscheduler "cloud.google.com/go/scheduler/apiv1"
 	schedulerpb "google.golang.org/genproto/googleapis/cloud/scheduler/v1"
