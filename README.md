@@ -1,26 +1,19 @@
 # Jooto Go WebApp Template
 
-This is a template for a Go web application.
+Goでwebアプリケーションを立ち上げる時のテンプレートです。
 
 ## Development
 
-To run the application in development mode with hot-reload:
+ホットリロードを伴うdevモードでアプリケーションをrunする:
 
 ```
+make install-tools // 最初だけ
 make dev
 ```
 
-This will start the server on `http://localhost:8080` and automatically reload when you make changes to the code.
-
-If this is your first time running the project, you may need to install the required tools:
-
-```
-make install-tools
-```
+ - これは`http://localhost:8080`でサーバーを立ち上げ、リロードをすればコードの変更を即座に反映することができる
 
 ## Building
-
-To build the application:
 
 ```
 make build
@@ -34,14 +27,6 @@ To build and run the application:
 
 ```
 make run
-```
-
-## Testing
-
-To run tests:
-
-```
-make test
 ```
 
 ## Endpoints
